@@ -19,6 +19,6 @@ public class ServiceTest {
 
     @Test
     public void serviceSaludo() throws Exception {
-        assertThat(saludo.saluda("Domingo")).isEqualTo("Hola Domingo");
+        assertThat(saludo.saluda("Domingo")).isEqualTo("Buenos días Domingo");
     }
 }

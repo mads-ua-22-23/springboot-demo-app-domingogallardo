@@ -35,6 +35,6 @@ public class MockMvcTest {
         this.mockMvc.perform(post("/saludoform")
                 .param("nombre", "Domingo"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Hola Domingo")));
+                .andExpect(content().string(containsString("Buenos días Domingo")));
     }
 }
