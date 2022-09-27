@@ -1,6 +1,7 @@
 # Documentación práctica 1 MADS
 
-Autor: Domingo Gallardo Lóepz
+- Autor: Domingo Gallardo López   
+- Fecha: 27/09/2022
 
 ## Funcionalidad implementada
 
@@ -17,7 +18,7 @@ Para probar la aplicación hay que lanzarla con el comando:
 ./mvnw spring-boot:run
 ```
 
-La URL para probar la aplicación es: <localhost:8080/esPar>.
+La URL para probar la aplicación es: [localhost:8080/esPar](localhost:8080/esPar).
 
 ## Implementación
 
@@ -51,8 +52,18 @@ public class ParService {
 }
 ```
 
-### Controller
+### Controlador
 
+El controlador `ParController` define los métodos a ejecutar cuando se 
+realizan las peticiones `GET` y `POST` a la URL `/esPar`.
+
+La petición `GET` devuelve una plantilla con el formulario HTML, de forma
+muy similar a la aplicación ejemplo inicial. 
+
+La petición `POST` comprueba si ha habido algún error en el formulario, en
+cuyo caso devuelve el propio formulario, y, si no, le pasa a la vista
+`esParResult` el número y el booleano si es par o no. Para ello añade
+al objeto `model` estos dos datos usando los atributos `numero` y `esPar`.
 
 ```java
 @Controller
@@ -77,7 +88,17 @@ public class ParController {
 }
 ```
 
-### Modelo y formulario
+### Formulario
+
+El formulario `formGetNum.html` pide al usuario el número. Es casi idéntico a 
+la aplicación inicial. Solo cambia el objeto `numData` y el campo `numero`, 
+que se corresponden con la nueva clase modelo `NumData`.
+
+La clase `NumData` es la que contiene el campo `numero` que recoge en el
+formulario. La anotación de validación `@Min(value = 0)` restringe los valores 
+posibles del campo a números mayores o iguales a 0. El mensaje que se añade
+en la anotación es el que se mostrará al usuario si se produce un error de 
+validación.
 
 ```java
 public class NumData {
@@ -88,14 +109,19 @@ public class NumData {
 }
 ```
 
-El formulario HTML es idéntico a la aplicación inicial. Solo cambia 
-el objeto `numData` y el campo `numero`, para adaptarlo a la nueva
-clase modelo.
 
 ### Vista
 
 El fichero `src/main/resources/esParResult.html` contiene la vista 
-que muestra el resultado.
+que muestra el resultado de la aplicación: el número en verde o en rojo 
+dependiendo de si es par o impar.
+
+El controlador le pasa a la vista los atributos `numero` y `esPar`. En
+la vista se utiliza el atributo booleano para definir el estilo CSS de 
+la cabecera `H1`. Usando la construcción de _Thymeleaf_ `th:style` se
+hace un chequeo de la variable `esPar` y se define como estilo `color: green` 
+o `color: red` dependiendo de su valor booleano. Para el texto del `H1` se
+usa el valor del atributo `numero`.
 
 ```html
 <!DOCTYPE html>
@@ -107,55 +133,45 @@ que muestra el resultado.
 
 ### Tests
 
-Tests del servicio:
+Los tests del servicio son muy sencillos. El primero comprueba dos números, uno
+par y otro impar:
 
 ```java
-@SpringBootTest
-public class ParServiceTest {
-
-    @Autowired
-    ParService parService;
-
-    // Probamos dos valores sencillos
-    @Test
-    public void dosNumerosParImpar() throws Exception {
-        assertThat(parService.esPar(10)).isTrue();
-        assertThat(parService.esPar(11)).isFalse();
-    }
-
-    // Probamos el 0, que según la Wikipedia es par
-    // https://es.wikipedia.org/wiki/Paridad_del_cero
-    @Test
-    public void elCeroEsPar() throws Exception {
-        assertThat(parService.esPar(0)).isTrue();
-    }
+@Test
+public void dosNumerosParImpar() throws Exception {
+    assertThat(parService.esPar(10)).isTrue();
+    assertThat(parService.esPar(11)).isFalse();
 }
 ```
 
-Tests del controller:
+Y el segundo comprueba el caso especial del número 0, que es par.
 
 ```java
-@SpringBootTest
-@AutoConfigureMockMvc
-public class ParControllerTest {
+// Probamos el 0, que según la Wikipedia es par
+// https://es.wikipedia.org/wiki/Paridad_del_cero
+@Test
+public void elCeroEsPar() throws Exception {
+    assertThat(parService.esPar(0)).isTrue();
+}
+```
 
-    @Autowired
-    private MockMvc mockMvc;
+Los tests del controller también son muy sencillos. Se pasa a la 
+petición `POST` el parámetro con el número y se comprueba que en 
+el HTML resultante aparece el propio número y el color correcto.
 
-    @Test
-    public void postDevuelveNumeroVerdeCuandoEsPar() throws Exception {
-        this.mockMvc.perform(post("/esPar")
-                .param("numero", "10"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(allOf(
-                        containsString("10"),
-                        containsString("green"))));
-    }
-    
-    // Otros tests similares
+```java
+@Test
+public void postDevuelveNumeroVerdeCuandoEsPar() throws Exception {
+    this.mockMvc.perform(post("/esPar")
+            .param("numero", "10"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(allOf(
+                    containsString("10"),
+                    containsString("green"))));
 }
 ```
 
 ## Repositorios
 
-
+- Repositorio GitHub: [https://github.com/mads-ua-22-23/springboot-demo-app-domingogallardo](https://github.com/mads-ua-22-23/springboot-demo-app-domingogallardo)
+- Repositorio DockerHub: [https://hub.docker.com/r/domingogallardo/spring-boot-demoapp](https://hub.docker.com/r/domingogallardo/spring-boot-demoapp)
