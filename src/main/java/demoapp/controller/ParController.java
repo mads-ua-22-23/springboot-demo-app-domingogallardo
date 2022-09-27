@@ -4,7 +4,10 @@ import demoapp.service.ParService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 public class ParController {
@@ -19,8 +22,13 @@ public class ParController {
     }
 
     @PostMapping("/esPar")
-    public @ResponseBody String esPar(@ModelAttribute NumData numero, Model model) {
-        String resultado = "El número " + numero.getNumero() + (service.esPar(numero.getNumero()) ? " es par" : " no es par");
-        return resultado;
+    public String esPar(@ModelAttribute @Valid NumData numero, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "formGetNum";
+        } else {
+            String resultado = "El número " + numero.getNumero() + (service.esPar(numero.getNumero()) ? " es par" : " no es par");
+            model.addAttribute("mensaje", resultado);
+            return "saludo";
+        }
     }
 }

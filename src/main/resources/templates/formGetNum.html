@@ -10,6 +10,7 @@ la primera letra por minúscula (numData) -->
         <tr>
             <td>Introduce un número:</td>
             <td><input type="text" th:field="*{numero}" /></td>
+            <td th:if="${#fields.hasErrors('numero')}" th:errors="*{numero}"></td>
         </tr>
         <tr>
             <td><button type="submit">Enviar</button></td>
