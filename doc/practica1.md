@@ -18,7 +18,7 @@ Para probar la aplicación hay que lanzarla con el comando:
 ./mvnw spring-boot:run
 ```
 
-La URL para probar la aplicación es: [localhost:8080/esPar](localhost:8080/esPar).
+La URL para probar la aplicación es: [http://localhost:8080/esPar](http://localhost:8080/esPar).
 
 ## Implementación
 
@@ -52,6 +52,28 @@ public class ParService {
 }
 ```
 
+### Formulario
+
+El formulario `formGetNum.html` pide al usuario el número. Es casi idéntico a
+la aplicación inicial. Solo cambia el objeto `numData` y el campo `numero`,
+que se corresponden con la nueva clase modelo `NumData`.
+
+La clase `NumData` que se muestra a continuación es la que contiene el campo `numero` que recoge en el
+formulario. La anotación de validación `@Min(value = 0)` restringe los valores
+posibles del campo a números mayores o iguales a 0. El mensaje que se añade
+en la anotación es el que se mostrará al usuario si se produce un error de
+validación.
+
+```java
+public class NumData {
+    @Min(value = 0, message = "Debe ser mayor o igual que 0")
+    Integer numero;
+    
+    // getters y setters
+}
+```
+
+
 ### Controlador
 
 El controlador `ParController` define los métodos a ejecutar cuando se 
@@ -60,9 +82,9 @@ realizan las peticiones `GET` y `POST` a la URL `/esPar`.
 La petición `GET` devuelve una plantilla con el formulario HTML, de forma
 muy similar a la aplicación ejemplo inicial. 
 
-La petición `POST` comprueba si ha habido algún error en el formulario, en
+La petición `POST` que mostramos a continuación comprueba si ha habido algún error en el formulario, en
 cuyo caso devuelve el propio formulario, y, si no, le pasa a la vista
-`esParResult` el número y el booleano si es par o no. Para ello añade
+`esParResult.html` el número y el booleano si es par o no. Para ello añade
 al objeto `model` estos dos datos usando los atributos `numero` y `esPar`.
 
 ```java
@@ -88,40 +110,14 @@ public class ParController {
 }
 ```
 
-### Formulario
-
-El formulario `formGetNum.html` pide al usuario el número. Es casi idéntico a 
-la aplicación inicial. Solo cambia el objeto `numData` y el campo `numero`, 
-que se corresponden con la nueva clase modelo `NumData`.
-
-La clase `NumData` es la que contiene el campo `numero` que recoge en el
-formulario. La anotación de validación `@Min(value = 0)` restringe los valores 
-posibles del campo a números mayores o iguales a 0. El mensaje que se añade
-en la anotación es el que se mostrará al usuario si se produce un error de 
-validación.
-
-```java
-public class NumData {
-    @Min(value = 0, message = "Debe ser mayor o igual que 0")
-    Integer numero;
-    
-    // getters y setters
-}
-```
-
-
 ### Vista
 
 El fichero `src/main/resources/esParResult.html` contiene la vista 
 que muestra el resultado de la aplicación: el número en verde o en rojo 
 dependiendo de si es par o impar.
 
-El controlador le pasa a la vista los atributos `numero` y `esPar`. En
-la vista se utiliza el atributo booleano para definir el estilo CSS de 
-la cabecera `H1`. Usando la construcción de _Thymeleaf_ `th:style` se
-hace un chequeo de la variable `esPar` y se define como estilo `color: green` 
-o `color: red` dependiendo de su valor booleano. Para el texto del `H1` se
-usa el valor del atributo `numero`.
+El controlador le pasa a la vista los atributos `numero` y `esPar`. A continuación
+podemos ver el código que muestra el número en rojo o en verde:
 
 ```html
 <!DOCTYPE html>
@@ -130,6 +126,13 @@ usa el valor del atributo `numero`.
     <h1 th:style="${esPar} ? 'color: green;' : 'color: red'" th:text="${numero}" </h1>
 </html>
 ```
+
+Se utiliza el atributo booleano `esPar` para definir el estilo CSS de la cabecera `H1`,
+usando la construcción `th:style` y el operador condicional `?`. Si la variable `esPar` 
+es `true` se define como estilo `color: green` y, en caso contrario, se usa el 
+estilo `color: red`. 
+
+Para el texto del `H1` se usa el valor del atributo `numero` con el operador `th:text`.
 
 ### Tests
 
