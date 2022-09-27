@@ -26,6 +26,7 @@ public class ParController {
         if (bindingResult.hasErrors()) {
             return "formGetNum";
         } else {
+            model.addAttribute("numero", numero.getNumero());
             model.addAttribute("esPar", service.esPar(numero.getNumero()));
             return "esParResult";
         }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <h1 th:text="${esPar} ? 'es par' : 'es impar'"> </h1>
+    <p>(El número se muestra en verde si es par o en rojo si es impar)</p>
+    <h1 th:style="${esPar} ? 'color: green;' : 'color: red'" th:text="${numero}" </h1>
 </html>
