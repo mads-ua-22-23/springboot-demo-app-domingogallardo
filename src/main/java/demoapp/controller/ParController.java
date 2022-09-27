@@ -26,9 +26,8 @@ public class ParController {
         if (bindingResult.hasErrors()) {
             return "formGetNum";
         } else {
-            String resultado = "El número " + numero.getNumero() + (service.esPar(numero.getNumero()) ? " es par" : " no es par");
-            model.addAttribute("mensaje", resultado);
-            return "saludo";
+            model.addAttribute("esPar", service.esPar(numero.getNumero()));
+            return "esParResult";
         }
     }
 }
