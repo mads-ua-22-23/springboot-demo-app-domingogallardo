@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ParService {
-    public boolean esPar(Integer num) {
+    public boolean esPar(int num) {
         return (num % 2) == 0;
     }
 }
