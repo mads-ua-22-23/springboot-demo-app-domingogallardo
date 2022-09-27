@@ -38,4 +38,14 @@ public class ParControllerTest {
                         containsString("11"),
                         containsString("red"))));
     }
+
+    @Test
+    public void postConsideraQueCeroEsPar() throws Exception {
+        this.mockMvc.perform(post("/esPar")
+                        .param("numero", "0"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(allOf(
+                        containsString("0"),
+                        containsString("green"))));
+    }
 }

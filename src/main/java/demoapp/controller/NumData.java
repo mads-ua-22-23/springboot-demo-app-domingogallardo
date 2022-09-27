@@ -1,9 +1,9 @@
 package demoapp.controller;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Min;
 
 public class NumData {
-    @Positive
+    @Min(value = 0, message = "Debe ser mayor o igual que 0")
     Integer numero;
 
     public Integer getNumero() {
